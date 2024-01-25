@@ -1224,8 +1224,9 @@ open class ZLCustomCamera: UIViewController {
             let model = nav?.arrSelectedModels.first
             let origin = nav?.isSelectedOriginal
             
-            if let model = model, let origin = origin {
-                self?.getPhotoModelBlock?(model, origin);
+            if let mo = model, let ori = origin {
+                print("model:\(mo), origin: \(ori)")
+                self?.getPhotoModelBlock?(mo, ori);
             }
             
             nav?.dismiss(animated: false, completion: {
