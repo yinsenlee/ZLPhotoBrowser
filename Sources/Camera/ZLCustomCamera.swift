@@ -1208,31 +1208,6 @@ open class ZLCustomCamera: UIViewController {
         recordVideoPlayerLayer?.player?.seek(to: .zero)
         recordVideoPlayerLayer?.player?.play()
     }
-    
-    // 通过 UIImage 创建占位符 PHAsset 对象（不保存到相册）
-    func createPHAssetFromImage(image: UIImage) -> PHAsset? {
-        var createdAsset: PHAsset?
-        
-        do {
-            try PHPhotoLibrary.shared().performChangesAndWait {
-                // 创建 PHAssetChangeRequest 对象
-                let request = PHAssetChangeRequest.creationRequestForAsset(from: image)
-                
-                // 获取占位符的 PHObjectPlaceholder 对象
-                guard let placeholder = request.placeholderForCreatedAsset else {
-                    return
-                }
-                
-                // 通过占位符获取实际的 PHAsset 对象
-                createdAsset = PHAsset.fetchAssets(withLocalIdentifiers: [placeholder.localIdentifier], options: nil).firstObject
-            }
-        } catch {
-            // 错误处理
-            print("创建 PHAsset 对象失败，错误：\(error)")
-        }
-        
-        return createdAsset
-    }
 }
 
 extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
@@ -1264,13 +1239,20 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                 self.takedImageView.isHidden = false
                 
                 if ZLPhotoConfiguration.default().afterTakePhotoDidPreview {
-                    let asset = createPHAssetFromImage(image: self.takedImage!)
-                    let model = ZLPhotoModel(asset: asset!)
-                    NSLog("拍照后直接进入预览页")
-                    let vc = ZLPhotoPreviewController(photos: [model], index: 0, showBottomViewAndSelectBtn: true)
-                    self.navigationController?.pushViewController(vc, animated: true)
+                    if let image = self.takedImage {
+                        print("拍照后直接进入预览页")
+                        ZLPhotoManager.saveImageToAlbum(image: image) { [weak self] suc, asset in
+                            if suc, let asset = asset {
+                                let model = ZLPhotoModel(asset: asset)
+                                let vc = ZLPhotoPreviewController(photos: [model], index: 0, showBottomViewAndSelectBtn: true)
+                                self?.navigationController?.pushViewController(vc, animated: true)
+                            } else {
+                                debugPrint("保存图片到相册失败")
+                            }
+                        }
+                    }
                 } else {
-                    NSLog("拍照后直接进入编辑页面")
+                    print("拍照后直接进入编辑页面")
                     self.editImage()
                 }
             } else {
