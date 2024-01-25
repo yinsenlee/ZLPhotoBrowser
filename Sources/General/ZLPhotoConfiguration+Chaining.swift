@@ -309,4 +309,10 @@ public extension ZLPhotoConfiguration {
         operateBeforeDoneAction = block
         return self
     }
+    
+    @discardableResult
+    func afterTakePhotoDidPreview(_ value: Bool) -> ZLPhotoConfiguration {
+        afterTakePhotoDidPreview = value
+        return self
+    }
 }
