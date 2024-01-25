@@ -1244,8 +1244,10 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                         ZLPhotoManager.saveImageToAlbum(image: image) { [weak self] suc, asset in
                             if suc, let asset = asset {
                                 let model = ZLPhotoModel(asset: asset)
+                                model.isSelected = true
                                 let vc = ZLPhotoPreviewController(photos: [model], index: 0, showBottomViewAndSelectBtn: true)
-                                self?.present(vc, animated: false, completion: nil)
+                                vc.modalPresentationStyle = .fullScreen
+                                self?.show(vc, sender: nil)
                             } else {
                                 debugPrint("保存图片到相册失败")
                             }
