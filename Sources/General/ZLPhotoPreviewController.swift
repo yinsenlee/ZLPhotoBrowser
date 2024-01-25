@@ -88,8 +88,13 @@ class ZLPhotoPreviewController: UIViewController {
     
     private lazy var selectBtn: ZLEnlargeButton = {
         let btn = ZLEnlargeButton(type: .custom)
-        btn.setImage(.zl.getImage("zl_btn_unselected_with_check"), for: .normal)
-        btn.setImage(.zl.getImage("zl_btn_selected"), for: .selected)
+        if #available(iOS 13.0, *) {
+            btn.setImage(.zl.getImage("zl_btn_unselected_with_check")?.withTintColor(ZLPhotoUIConfiguration.default().selectedBorderColor, renderingMode: .alwaysTemplate), for: .normal)
+            btn.setImage(.zl.getImage("zl_btn_selected")?.withTintColor(ZLPhotoUIConfiguration.default().selectedBorderColor, renderingMode: .alwaysTemplate), for: .selected)
+        } else {
+            btn.setImage(.zl.getImage("zl_btn_unselected_with_check"), for: .normal)
+            btn.setImage(.zl.getImage("zl_btn_selected"), for: .selected)
+        }
         btn.enlargeInset = 10
         btn.addTarget(self, action: #selector(selectBtnClick), for: .touchUpInside)
         return btn
