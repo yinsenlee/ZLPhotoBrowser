@@ -711,7 +711,7 @@ class ZLPhotoPreviewController: UIViewController {
         
         let currentModel = arrDataSources[currentIndex]
         
-        print("autoSelectCurrentIfNotSelectAnyone\(autoSelectCurrentIfNotSelectAnyone), currentModel:\(currentModel), nav.arrSelectedModels: \(nav.arrSelectedModels)")
+        print("autoSelectCurrentIfNotSelectAnyone: \(autoSelectCurrentIfNotSelectAnyone), currentModel: \(currentModel), nav.arrSelectedModels: \(nav.arrSelectedModels.count)")
         
         guard autoSelectCurrentIfNotSelectAnyone, nav.arrSelectedModels.isEmpty else {
             callBackBeforeDone()

@@ -1216,10 +1216,10 @@ open class ZLCustomCamera: UIViewController {
     private func getImageNav(rootViewController: UIViewController) -> ZLImageNavController {
         let nav = ZLImageNavController(rootViewController: rootViewController)
         nav.modalPresentationStyle = .fullScreen
-        nav.arrSelectedModels.removeAll()
-        if let model = self.photoModel {
-            nav.arrSelectedModels.append(model)
-        }
+//        nav.arrSelectedModels.removeAll()
+//        if let model = self.photoModel {
+//            nav.arrSelectedModels.append(model)
+//        }
         nav.selectImageBlock = {[weak self, weak nav] in
             let model = nav?.arrSelectedModels.first
             let origin = nav?.isSelectedOriginal
