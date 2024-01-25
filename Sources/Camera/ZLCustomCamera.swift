@@ -1217,8 +1217,9 @@ open class ZLCustomCamera: UIViewController {
         nav.selectImageBlock = {[weak self, weak nav] in
             let model = nav?.arrSelectedModels.first
             
-//            nav?.dismiss(animated: false)
-            self?.dismiss(animated: false)
+            nav?.dismiss(animated: false, completion: {
+                self?.dismiss(animated: false)
+            })
         };
         nav.cancelBlock = { [weak self] in
             self?.cancelBlock?()
