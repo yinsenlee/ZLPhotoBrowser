@@ -262,7 +262,7 @@ public class ZLPhotoConfiguration: NSObject {
     /// The second parameter is the block that needs to be called after the user completes the operation.
     public var operateBeforeDoneAction: ((UIViewController, @escaping () -> Void) -> Void)?
     
-    /// 拍照后是否进入预览界面
+    /// take photo after enter preview 
     public var afterTakePhotoDidPreview = false
 }
 
