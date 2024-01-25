@@ -1245,7 +1245,7 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                             if suc, let asset = asset {
                                 let model = ZLPhotoModel(asset: asset)
                                 let vc = ZLPhotoPreviewController(photos: [model], index: 0, showBottomViewAndSelectBtn: true)
-                                self?.navigationController?.pushViewController(vc, animated: true)
+                                self?.present(vc, animated: false, completion: nil)
                             } else {
                                 debugPrint("保存图片到相册失败")
                             }
