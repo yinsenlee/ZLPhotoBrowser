@@ -44,6 +44,8 @@ open class ZLCustomCamera: UIViewController {
     
     @objc public var takeDoneBlock: ((UIImage?, URL?) -> Void)?
     
+    @objc public var getPhotoModelBlock: ((ZLPhotoModel?, Bool) -> Void)?
+    
     @objc public var cancelBlock: (() -> Void)?
     
     public lazy var tipsLabel: UILabel = {
@@ -1216,9 +1218,14 @@ open class ZLCustomCamera: UIViewController {
         nav.modalPresentationStyle = .fullScreen
         nav.selectImageBlock = {[weak self, weak nav] in
             let model = nav?.arrSelectedModels.first
+            let origin = nav?.isSelectedOriginal
+            
+            if let model = model, let origin = origin {
+                self?.getPhotoModelBlock?(model, origin);
+            }
             
             nav?.dismiss(animated: false, completion: {
-                self?.dismiss(animated: false)
+                self?.dismiss(animated: true)
             })
         };
         nav.cancelBlock = { [weak self] in
