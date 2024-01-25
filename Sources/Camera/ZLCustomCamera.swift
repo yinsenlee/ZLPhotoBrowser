@@ -1214,7 +1214,12 @@ open class ZLCustomCamera: UIViewController {
     private func getImageNav(rootViewController: UIViewController) -> ZLImageNavController {
         let nav = ZLImageNavController(rootViewController: rootViewController)
         nav.modalPresentationStyle = .fullScreen
-        
+        nav.selectImageBlock = {[weak self, weak nav] in
+            let model = nav?.arrSelectedModels.first
+            
+//            nav?.dismiss(animated: false)
+            self?.dismiss(animated: false)
+        };
         nav.cancelBlock = { [weak self] in
             self?.cancelBlock?()
         }
@@ -1267,10 +1272,10 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                                 vc.autoSelectCurrentIfNotSelectAnyone = false
                                 vc.backBlock = { [weak self] in
                                     vc.dismiss(animated: false)
-                                    self?.cancelBlock?()
+                                    self?.retakeBtnClick()
                                 }
                                 let nav = self?.getImageNav(rootViewController: vc)
-                                self?.showDetailViewController(nav!, sender: nil)
+                                self?.present(nav!, animated: false)
                             } else {
                                 debugPrint("保存图片到相册失败")
                             }
