@@ -1213,14 +1213,23 @@ open class ZLCustomCamera: UIViewController {
     func createPHAssetFromImage(image: UIImage) -> PHAsset? {
         var createdAsset: PHAsset?
         
-        PHPhotoLibrary.shared().performChangesAndWait({
-            // 创建 PHAssetChangeRequest 对象
-            if let request = PHAssetChangeRequest.creationRequestForAsset(from: image) {
-                // 设置占位符的图片
-                request.creationDate = Date()
-                createdAsset = request.placeholderForCreatedAsset
+        do {
+            try PHPhotoLibrary.shared().performChangesAndWait {
+                // 创建 PHAssetChangeRequest 对象
+                let request = PHAssetChangeRequest.creationRequestForAsset(from: image)
+                
+                // 获取占位符的 PHObjectPlaceholder 对象
+                guard let placeholder = request.placeholderForCreatedAsset else {
+                    return
+                }
+                
+                // 通过占位符获取实际的 PHAsset 对象
+                createdAsset = PHAsset.fetchAssets(withLocalIdentifiers: [placeholder.localIdentifier], options: nil).firstObject
             }
-        })
+        } catch {
+            // 错误处理
+            print("创建 PHAsset 对象失败，错误：\(error)")
+        }
         
         return createdAsset
     }
@@ -1235,7 +1244,7 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
     }
     
     public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
-        ZLMainAsync {
+        ZLMainAsync { [self] in
             defer {
                 self.isTakingPicture = false
             }
@@ -1255,17 +1264,11 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                 self.takedImageView.isHidden = false
                 
                 if ZLPhotoConfiguration.default().afterTakePhotoDidPreview {
-                    guard let asset = createPHAssetFromImage(image: self.takedImage) else {
-                        NSLog("PHAsset 对象为空")
-                        return
-                    }
-                    guard let model = ZLPhotoModel(asset: asset) else {
-                        NSLog("ZLPhotoModel 对象为空")
-                        return
-                    }
+                    let asset = createPHAssetFromImage(image: self.takedImage!)
+                    let model = ZLPhotoModel(asset: asset!)
                     NSLog("拍照后直接进入预览页")
                     let vc = ZLPhotoPreviewController(photos: [model], index: 0, showBottomViewAndSelectBtn: true)
-                    self.navigationController?.pushViewController(vc, animated: YES)
+                    self.navigationController?.pushViewController(vc, animated: true)
                 } else {
                     NSLog("拍照后直接进入编辑页面")
                     self.editImage()
