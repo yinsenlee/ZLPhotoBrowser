@@ -1216,6 +1216,10 @@ open class ZLCustomCamera: UIViewController {
     private func getImageNav(rootViewController: UIViewController) -> ZLImageNavController {
         let nav = ZLImageNavController(rootViewController: rootViewController)
         nav.modalPresentationStyle = .fullScreen
+        nav.arrSelectedModels.removeAll()
+        if let model = self.photoModel {
+            nav.arrSelectedModels.append(model)
+        }
         nav.selectImageBlock = {[weak self, weak nav] in
             let model = nav?.arrSelectedModels.first
             let origin = nav?.isSelectedOriginal
@@ -1230,10 +1234,6 @@ open class ZLCustomCamera: UIViewController {
         };
         nav.cancelBlock = { [weak self] in
             self?.cancelBlock?()
-        }
-        nav.arrSelectedModels.removeAll()
-        if let model = self.photoModel {
-            nav.arrSelectedModels.append(model)
         }
         
         return nav
@@ -1277,7 +1277,6 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                                 model.isSelected = true
                                 self?.photoModel = model
                                 let vc = ZLPhotoPreviewController(photos: [model], index: 0, showBottomViewAndSelectBtn: true)
-                                vc.autoSelectCurrentIfNotSelectAnyone = false
                                 vc.backBlock = { [weak self] in
                                     vc.dismiss(animated: false)
                                     self?.retakeBtnClick()
