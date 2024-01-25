@@ -239,6 +239,8 @@ open class ZLCustomCamera: UIViewController {
     
     private lazy var cameraConfig = ZLPhotoConfiguration.default().cameraConfiguration
     
+    private var photoModel: ZLPhotoModel?
+    
     // 仅支持竖屏
     override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
@@ -1208,6 +1210,21 @@ open class ZLCustomCamera: UIViewController {
         recordVideoPlayerLayer?.player?.seek(to: .zero)
         recordVideoPlayerLayer?.player?.play()
     }
+    
+    private func getImageNav(rootViewController: UIViewController) -> ZLImageNavController {
+        let nav = ZLImageNavController(rootViewController: rootViewController)
+        nav.modalPresentationStyle = .fullScreen
+        
+        nav.cancelBlock = { [weak self] in
+            self?.cancelBlock?()
+        }
+        nav.arrSelectedModels.removeAll()
+        if let model = self.photoModel {
+            nav.arrSelectedModels.append(model)
+        }
+        
+        return nav
+    }
 }
 
 extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
@@ -1245,9 +1262,15 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                             if suc, let asset = asset {
                                 let model = ZLPhotoModel(asset: asset)
                                 model.isSelected = true
+                                self?.photoModel = model
                                 let vc = ZLPhotoPreviewController(photos: [model], index: 0, showBottomViewAndSelectBtn: true)
-                                vc.modalPresentationStyle = .fullScreen
-                                self?.show(vc, sender: nil)
+                                vc.autoSelectCurrentIfNotSelectAnyone = false
+                                vc.backBlock = { [weak self] in
+                                    vc.dismiss(animated: false)
+                                    self?.cancelBlock?()
+                                }
+                                let nav = self?.getImageNav(rootViewController: vc)
+                                self?.showDetailViewController(nav!, sender: nil)
                             } else {
                                 debugPrint("保存图片到相册失败")
                             }
