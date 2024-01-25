@@ -261,6 +261,9 @@ public class ZLPhotoConfiguration: NSObject {
     /// The first parameter is the current controller.
     /// The second parameter is the block that needs to be called after the user completes the operation.
     public var operateBeforeDoneAction: ((UIViewController, @escaping () -> Void) -> Void)?
+    
+    /// 拍照后是否进入预览界面
+    public var afterTakePhotoDidPreview = false
 }
 
 @objc public enum ZLNoAuthorityType: Int {
