@@ -1216,16 +1216,11 @@ open class ZLCustomCamera: UIViewController {
     private func getImageNav(rootViewController: UIViewController) -> ZLImageNavController {
         let nav = ZLImageNavController(rootViewController: rootViewController)
         nav.modalPresentationStyle = .fullScreen
-//        nav.arrSelectedModels.removeAll()
-//        if let model = self.photoModel {
-//            nav.arrSelectedModels.append(model)
-//        }
         nav.selectImageBlock = {[weak self, weak nav] in
             let model = nav?.arrSelectedModels.first
             let origin = nav?.isSelectedOriginal
             
             if let mo = model, let ori = origin {
-                print("model:\(mo), origin: \(ori)")
                 self?.getPhotoModelBlock?(mo, ori);
             }
             
@@ -1271,7 +1266,6 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                 
                 if ZLPhotoConfiguration.default().afterTakePhotoDidPreview {
                     if let image = self.takedImage {
-                        print("拍照后直接进入预览页")
                         ZLPhotoManager.saveImageToAlbum(image: image) { [weak self] suc, asset in
                             if suc, let asset = asset {
                                 print("asset: \(asset.mediaType), \(asset.localIdentifier), \(asset.pixelWidth), \(asset.pixelHeight)")

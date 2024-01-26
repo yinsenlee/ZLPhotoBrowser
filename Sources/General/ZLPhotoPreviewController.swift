@@ -700,12 +700,6 @@ class ZLPhotoPreviewController: UIViewController {
         }
         
         func callBackBeforeDone() {
-            print("autoSelectCurrentIfNotSelectAnyone: \(autoSelectCurrentIfNotSelectAnyone)")
-            print("currentModel: \(currentModel.asset)")
-            print("currentModel: \(currentModel.type)")
-            print("currentModel: \(currentModel.isSelected)")
-            print("nav.arrSelectedModels:: \(nav.arrSelectedModels.count)")
-            
             if let block = ZLPhotoConfiguration.default().operateBeforeDoneAction {
                 block(self) { [weak nav] in
                     nav?.selectImageBlock?()
