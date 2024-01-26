@@ -1274,6 +1274,7 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                         print("拍照后直接进入预览页")
                         ZLPhotoManager.saveImageToAlbum(image: image) { [weak self] suc, asset in
                             if suc, let asset = asset {
+                                print("asset: \(asset.mediaType), \(asset.localIdentifier), \(asset.pixelWidth), \(asset.pixelHeight)")
                                 let model = ZLPhotoModel(asset: asset)
                                 model.isSelected = true
                                 self?.photoModel = model
