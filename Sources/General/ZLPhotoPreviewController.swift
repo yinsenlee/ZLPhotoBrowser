@@ -299,7 +299,8 @@ class ZLPhotoPreviewController: UIViewController {
         var showSelPhotoPreview = false
         if ZLPhotoUIConfiguration.default().showSelectedPhotoPreview,
            let nav = navigationController as? ZLImageNavController,
-           !nav.arrSelectedModels.isEmpty {
+           !nav.arrSelectedModels.isEmpty,
+           !ZLPhotoConfiguration.default().afterTakePhotoDidPreview {
             showSelPhotoPreview = true
             bottomViewH += ZLPhotoPreviewController.selPhotoPreviewH
             selPhotoPreview?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: ZLPhotoPreviewController.selPhotoPreviewH)
