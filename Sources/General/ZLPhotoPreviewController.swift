@@ -509,7 +509,7 @@ class ZLPhotoPreviewController: UIViewController {
         }
         doneBtn.setTitle(doneTitle, for: .normal)
         
-        selPhotoPreview?.isHidden = selCount == 0
+        selPhotoPreview?.isHidden = (selCount == 0 || config.afterTakePhotoDidPreview)
         refreshOriginalLabelText()
         refreshBottomViewFrame()
         
