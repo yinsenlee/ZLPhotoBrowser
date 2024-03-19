@@ -1216,10 +1216,15 @@ open class ZLCustomCamera: UIViewController {
         nav.modalPresentationStyle = .fullScreen
         
         nav.selectImageBlock = {[weak self, weak nav] in
+            
+            print("liyong25-- ZLCustomCamera nav.selectImageBlock 回调")
+            
             let model = nav?.arrSelectedModels.first
             let origin = nav?.isSelectedOriginal
             
+            print("liyong25-- ZLCustomCamera nav.selectImageBlock 回调 \(nav?.arrSelectedModels.count ?? 0), \(origin ?? false)")
             if let mo = model, let ori = origin {
+                print("liyong25-- ZLCustomCamera nav.selectImageBlock 回调 解析数据 \(mo), \(ori)")
                 self?.getPhotoModelBlock?(mo, ori);
             }
             
