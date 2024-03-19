@@ -241,8 +241,6 @@ open class ZLCustomCamera: UIViewController {
     
     private lazy var cameraConfig = ZLPhotoConfiguration.default().cameraConfiguration
     
-    private var photoModel: ZLPhotoModel?
-    
     // 仅支持竖屏
     override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
@@ -1216,11 +1214,7 @@ open class ZLCustomCamera: UIViewController {
     private func getImageNav(rootViewController: UIViewController) -> ZLImageNavController {
         let nav = ZLImageNavController(rootViewController: rootViewController)
         nav.modalPresentationStyle = .fullScreen
-        nav.arrSelectedModels.removeAll()
-        if let model = self.photoModel {
-            nav.arrSelectedModels.append(model)
-        }
-        nav.isSelectedOriginal = true
+        
         nav.selectImageBlock = {[weak self, weak nav] in
             let model = nav?.arrSelectedModels.first
             let origin = nav?.isSelectedOriginal
@@ -1275,13 +1269,17 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                             if suc, let asset = asset {
                                 let model = ZLPhotoModel(asset: asset)
                                 model.isSelected = true
-                                self?.photoModel = model
+                                
                                 let vc = ZLPhotoPreviewController(photos: [model], index: 0, showBottomViewAndSelectBtn: true)
                                 vc.backBlock = { [weak self, weak vc] in
                                     vc?.dismiss(animated: false)
                                     self?.retakeBtnClick()
                                 }
+                                
                                 let nav = self?.getImageNav(rootViewController: vc)
+//                                nav?.arrSelectedModels.removeAll()
+//                                nav?.arrSelectedModels.append(model)
+                                
                                 self?.present(nav!, animated: false)
                             } else {
                                 debugPrint("保存图片到相册失败")
