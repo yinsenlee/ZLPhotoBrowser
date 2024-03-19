@@ -679,11 +679,8 @@ class ZLPhotoPreviewController: UIViewController {
             refreshOriginalLabelText()
         }
         
-        if let model = nav?.arrSelectedModels.first, let ori = nav?.isSelectedOriginal {
-            print("liyong25-- ZLPhotoPreviewController 页面 原图按钮点击事件 : \(model), \(ori)")
-        }
-        
-        if config.maxSelectCount == 1,
+        if !ZLPhotoConfiguration.default().afterTakePhotoDidPreview,
+           config.maxSelectCount == 1,
            !config.showSelectBtnWhenSingleSelect,
            !originalBtn.isSelected,
            nav?.arrSelectedModels.count == 1,
