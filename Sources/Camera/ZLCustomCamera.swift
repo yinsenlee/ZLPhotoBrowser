@@ -1283,8 +1283,8 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                                 
                                 let nav = self?.getImageNav(rootViewController: vc)
                                 nav?.isSelectedOriginal = true
-//                                nav?.arrSelectedModels.removeAll()
-//                                nav?.arrSelectedModels.append(model)
+                                nav?.arrSelectedModels.removeAll()
+                                nav?.arrSelectedModels.append(model)
                                 
                                 self?.present(nav!, animated: false)
                             } else {

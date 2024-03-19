@@ -583,6 +583,7 @@ class ZLPhotoPreviewController: UIViewController {
     }
     
     @objc private func selectBtnClick() {
+        print("liyong25-- ZLPhotoPreviewController 页面 selectBtnClick")
         guard let nav = navigationController as? ZLImageNavController else {
             zlLoggerInDebug("Navigation controller is null")
             return
@@ -593,6 +594,7 @@ class ZLPhotoPreviewController: UIViewController {
         let currentModel = arrDataSources[currentIndex]
         selectBtn.layer.removeAllAnimations()
         if currentModel.isSelected {
+            print("liyong25-- ZLPhotoPreviewController 页面 currentModel.isSelected")
             currentModel.isSelected = false
             nav.arrSelectedModels.removeAll { $0 == currentModel }
             selPhotoPreview?.removeSelModel(model: currentModel)
@@ -601,6 +603,7 @@ class ZLPhotoPreviewController: UIViewController {
             
             resetSubviewStatus()
         } else {
+            print("liyong25-- ZLPhotoPreviewController 页面 !currentModel.isSelected")
             if !canAddModel(currentModel, currentSelectCount: nav.arrSelectedModels.count, sender: self) {
                 return
             }
@@ -679,8 +682,11 @@ class ZLPhotoPreviewController: UIViewController {
             refreshOriginalLabelText()
         }
         
-        if !ZLPhotoConfiguration.default().afterTakePhotoDidPreview,
-           config.maxSelectCount == 1,
+        if config.afterTakePhotoDidPreview == true {
+            return
+        }
+        
+        if config.maxSelectCount == 1,
            !config.showSelectBtnWhenSingleSelect,
            !originalBtn.isSelected,
            nav?.arrSelectedModels.count == 1,
