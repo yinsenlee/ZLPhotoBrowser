@@ -195,6 +195,10 @@ class ZLPhotoPreviewController: UIViewController {
         currentIndex = min(index, photos.count - 1)
         indexBeforOrientationChanged = currentIndex
         super.init(nibName: nil, bundle: nil)
+        
+        let nav = navigationController as? ZLImageNavController
+        
+        print("liyong25-- ZLPhotoPreviewController init \(nav?.arrSelectedModels.count ?? 0), \(nav?.isSelectedOriginal ?? false)")
     }
     
     @available(*, unavailable)
@@ -674,6 +678,8 @@ class ZLPhotoPreviewController: UIViewController {
         
         let nav = (navigationController as? ZLImageNavController)
         nav?.isSelectedOriginal = originalBtn.isSelected
+        
+        print("liyong25-- ZLPhotoPreviewController 页面 \(nav?.arrSelectedModels.count ?? 0)")
         if nav?.arrSelectedModels.isEmpty == true, originalBtn.isSelected {
             print("liyong25-- ZLPhotoPreviewController 页面 nav?.arrSelectedModels.isEmpty == true, originalBtn.isSelected")
             selectBtnClick()
@@ -682,10 +688,13 @@ class ZLPhotoPreviewController: UIViewController {
             refreshOriginalLabelText()
         }
         
+        print("liyong25-- ZLPhotoPreviewController 页面 config.afterTakePhotoDidPreview: \(config.afterTakePhotoDidPreview)")
+        
         if config.afterTakePhotoDidPreview == true {
             return
         }
         
+        print("liyong25-- ZLPhotoPreviewController 页面 config.maxSelectCount: \(config.maxSelectCount), config.showSelectBtnWhenSingleSelect:\(config.showSelectBtnWhenSingleSelect), originalBtn.isSelected:\(originalBtn.isSelected), nav?.arrSelectedModels.count:\(nav?.arrSelectedModels.count ?? 0)")
         if config.maxSelectCount == 1,
            !config.showSelectBtnWhenSingleSelect,
            !originalBtn.isSelected,

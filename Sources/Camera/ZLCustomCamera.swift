@@ -1268,7 +1268,9 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                 self.takedImageView.image = self.takedImage
                 self.takedImageView.isHidden = false
                 
-                if ZLPhotoConfiguration.default().afterTakePhotoDidPreview {
+                let config = ZLPhotoConfiguration.default()
+                
+                if config.afterTakePhotoDidPreview {
                     if let image = self.takedImage {
                         ZLPhotoManager.saveImageToAlbum(image: image) { [weak self] suc, asset in
                             if suc, let asset = asset {
@@ -1285,6 +1287,7 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                                 nav?.isSelectedOriginal = true
                                 nav?.arrSelectedModels.removeAll()
                                 nav?.arrSelectedModels.append(model)
+                                config.didSelectAsset?(asset)
                                 
                                 self?.present(nav!, animated: false)
                             } else {
