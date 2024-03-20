@@ -44,7 +44,7 @@ open class ZLCustomCamera: UIViewController {
     
     @objc public var takeDoneBlock: ((UIImage?, URL?) -> Void)?
     
-    @objc public var getPhotoModelBlock: ((ZLPhotoModel?, Bool) -> Void)?
+    @objc public var getPhotoModelBlock: ((ZLResultModel?, Bool) -> Void)?
     
     @objc public var cancelBlock: (() -> Void)?
     
@@ -1210,34 +1210,6 @@ open class ZLCustomCamera: UIViewController {
         recordVideoPlayerLayer?.player?.seek(to: .zero)
         recordVideoPlayerLayer?.player?.play()
     }
-    
-    private func getImageNav(rootViewController: UIViewController) -> ZLImageNavController {
-        let nav = ZLImageNavController(rootViewController: rootViewController)
-        nav.modalPresentationStyle = .fullScreen
-        
-        nav.selectImageBlock = {[weak self, weak nav] in
-            
-            print("liyong25-- ZLCustomCamera nav.selectImageBlock 回调")
-            
-            let model = nav?.arrSelectedModels.first
-            let origin = nav?.isSelectedOriginal
-            
-            print("liyong25-- ZLCustomCamera nav.selectImageBlock 回调 \(nav?.arrSelectedModels.count ?? 0), \(origin ?? false)")
-            if let mo = model, let ori = origin {
-                print("liyong25-- ZLCustomCamera nav.selectImageBlock 回调 解析数据 \(mo), \(ori)")
-                self?.getPhotoModelBlock?(mo, ori);
-            }
-            
-            nav?.dismiss(animated: false, completion: {
-                self?.dismiss(animated: true)
-            })
-        };
-        nav.cancelBlock = { [weak self] in
-            self?.cancelBlock?()
-        }
-        
-        return nav
-    }
 }
 
 extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
@@ -1276,18 +1248,13 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                             if suc, let asset = asset {
                                 let ac = ZLPhotoPreviewSheet()
                                 
-//                                ac.selectImageBlock = { [weak self] results, isOriginal in
-//                                    guard let `self` = self else { return }
-//                                    self.selectedResults = results
-//                                    self.selectedImages = results.map { $0.image }
-//                                    self.selectedAssets = results.map { $0.asset }
-//                                    self.isOriginal = isOriginal
-//                                    self.collectionView.reloadData()
-//                                    debugPrint("images: \(self.selectedImages)")
-//                                    debugPrint("assets: \(self.selectedAssets)")
-//                                    debugPrint("isEdited: \(results.map { $0.isEdited })")
-//                                    debugPrint("isOriginal: \(isOriginal)")
-//                                }
+                                ac.selectImageBlock = { [weak self] results, isOriginal in
+                                    guard let `self` = self else { return }
+                                    
+                                    if let model = results.first {
+                                        self.getPhotoModelBlock?(model, isOriginal);
+                                    }
+                                }
                                 ac.previewAssets(sender: self!, assets: [asset], index: 0, isOriginal: true, showBottomViewAndSelectBtn: true)
 //                                ac.previewAssets(sender: self, assets: selectedAssets, index: indexPath.row, isOriginal: isOriginal, showBottomViewAndSelectBtn: true)
                                 
