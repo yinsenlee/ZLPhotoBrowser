@@ -1255,6 +1255,10 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                                         self.getPhotoModelBlock?(model, isOriginal);
                                     }
                                 }
+                                ac.cancelBlock = { [weak self] in
+                                    self?.retakeBtnClick()
+                                }
+                                
                                 ac.previewAssets(sender: self!, assets: [asset], index: 0, isOriginal: true, showBottomViewAndSelectBtn: true)
 //                                ac.previewAssets(sender: self, assets: selectedAssets, index: indexPath.row, isOriginal: isOriginal, showBottomViewAndSelectBtn: true)
                                 

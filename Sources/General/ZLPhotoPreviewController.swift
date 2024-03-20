@@ -688,12 +688,6 @@ class ZLPhotoPreviewController: UIViewController {
             refreshOriginalLabelText()
         }
         
-        print("liyong25-- ZLPhotoPreviewController 页面 config.afterTakePhotoDidPreview: \(config.afterTakePhotoDidPreview)")
-        
-        if config.afterTakePhotoDidPreview {
-            return
-        }
-        
         print("liyong25-- ZLPhotoPreviewController 页面 config.maxSelectCount: \(config.maxSelectCount), config.showSelectBtnWhenSingleSelect:\(config.showSelectBtnWhenSingleSelect), originalBtn.isSelected:\(originalBtn.isSelected), nav?.arrSelectedModels.count:\(nav?.arrSelectedModels.count ?? 0)")
         if config.maxSelectCount == 1,
            !config.showSelectBtnWhenSingleSelect,
