@@ -1274,22 +1274,42 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                     if let image = self.takedImage {
                         ZLPhotoManager.saveImageToAlbum(image: image) { [weak self] suc, asset in
                             if suc, let asset = asset {
-                                let model = ZLPhotoModel(asset: asset)
-                                model.isSelected = true
+                                let ac = ZLPhotoPreviewSheet()
                                 
-                                let vc = ZLPhotoPreviewController(photos: [model], index: 0, showBottomViewAndSelectBtn: true)
-                                vc.backBlock = { [weak self, weak vc] in
-                                    vc?.dismiss(animated: false)
-                                    self?.retakeBtnClick()
-                                }
+//                                ac.selectImageBlock = { [weak self] results, isOriginal in
+//                                    guard let `self` = self else { return }
+//                                    self.selectedResults = results
+//                                    self.selectedImages = results.map { $0.image }
+//                                    self.selectedAssets = results.map { $0.asset }
+//                                    self.isOriginal = isOriginal
+//                                    self.collectionView.reloadData()
+//                                    debugPrint("images: \(self.selectedImages)")
+//                                    debugPrint("assets: \(self.selectedAssets)")
+//                                    debugPrint("isEdited: \(results.map { $0.isEdited })")
+//                                    debugPrint("isOriginal: \(isOriginal)")
+//                                }
+                                ac.previewAssets(sender: self!, assets: [asset], index: 0, isOriginal: true, showBottomViewAndSelectBtn: true)
+//                                ac.previewAssets(sender: self, assets: selectedAssets, index: indexPath.row, isOriginal: isOriginal, showBottomViewAndSelectBtn: true)
                                 
-                                let nav = self?.getImageNav(rootViewController: vc)
-                                nav?.isSelectedOriginal = true
-                                nav?.arrSelectedModels.removeAll()
-                                nav?.arrSelectedModels.append(model)
-                                config.didSelectAsset?(asset)
                                 
-                                self?.present(nav!, animated: false)
+                                
+                                
+//                                let model = ZLPhotoModel(asset: asset)
+//                                model.isSelected = true
+//                                
+//                                let vc = ZLPhotoPreviewController(photos: [model], index: 0, showBottomViewAndSelectBtn: true)
+//                                vc.backBlock = { [weak self, weak vc] in
+//                                    vc?.dismiss(animated: false)
+//                                    self?.retakeBtnClick()
+//                                }
+//                                
+//                                let nav = self?.getImageNav(rootViewController: vc)
+//                                nav?.isSelectedOriginal = true
+//                                nav?.arrSelectedModels.removeAll()
+//                                nav?.arrSelectedModels.append(model)
+//                                config.didSelectAsset?(asset)
+//                                
+//                                self?.present(nav!, animated: false)
                             } else {
                                 debugPrint("保存图片到相册失败")
                             }

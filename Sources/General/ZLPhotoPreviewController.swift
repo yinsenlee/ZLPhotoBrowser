@@ -690,7 +690,7 @@ class ZLPhotoPreviewController: UIViewController {
         
         print("liyong25-- ZLPhotoPreviewController 页面 config.afterTakePhotoDidPreview: \(config.afterTakePhotoDidPreview)")
         
-        if config.afterTakePhotoDidPreview == true {
+        if config.afterTakePhotoDidPreview {
             return
         }
         
