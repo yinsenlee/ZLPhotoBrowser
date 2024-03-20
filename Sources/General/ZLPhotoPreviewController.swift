@@ -195,10 +195,6 @@ class ZLPhotoPreviewController: UIViewController {
         currentIndex = min(index, photos.count - 1)
         indexBeforOrientationChanged = currentIndex
         super.init(nibName: nil, bundle: nil)
-        
-        let nav = navigationController as? ZLImageNavController
-        
-        print("liyong25-- ZLPhotoPreviewController init \(nav?.arrSelectedModels.count ?? 0), \(nav?.isSelectedOriginal ?? false)")
     }
     
     @available(*, unavailable)
@@ -587,7 +583,6 @@ class ZLPhotoPreviewController: UIViewController {
     }
     
     @objc private func selectBtnClick() {
-        print("liyong25-- ZLPhotoPreviewController 页面 selectBtnClick")
         guard let nav = navigationController as? ZLImageNavController else {
             zlLoggerInDebug("Navigation controller is null")
             return
@@ -598,7 +593,6 @@ class ZLPhotoPreviewController: UIViewController {
         let currentModel = arrDataSources[currentIndex]
         selectBtn.layer.removeAllAnimations()
         if currentModel.isSelected {
-            print("liyong25-- ZLPhotoPreviewController 页面 currentModel.isSelected")
             currentModel.isSelected = false
             nav.arrSelectedModels.removeAll { $0 == currentModel }
             selPhotoPreview?.removeSelModel(model: currentModel)
@@ -607,7 +601,6 @@ class ZLPhotoPreviewController: UIViewController {
             
             resetSubviewStatus()
         } else {
-            print("liyong25-- ZLPhotoPreviewController 页面 !currentModel.isSelected")
             if !canAddModel(currentModel, currentSelectCount: nav.arrSelectedModels.count, sender: self) {
                 return
             }
@@ -670,7 +663,6 @@ class ZLPhotoPreviewController: UIViewController {
     }
     
     @objc private func originalPhotoClick() {
-        print("liyong25-- ZLPhotoPreviewController 页面 原图按钮点击事件")
         originalBtn.isSelected.toggle()
         
         let config = ZLPhotoConfiguration.default()
@@ -679,22 +671,17 @@ class ZLPhotoPreviewController: UIViewController {
         let nav = (navigationController as? ZLImageNavController)
         nav?.isSelectedOriginal = originalBtn.isSelected
         
-        print("liyong25-- ZLPhotoPreviewController 页面 \(nav?.arrSelectedModels.count ?? 0)")
         if nav?.arrSelectedModels.isEmpty == true, originalBtn.isSelected {
-            print("liyong25-- ZLPhotoPreviewController 页面 nav?.arrSelectedModels.isEmpty == true, originalBtn.isSelected")
             selectBtnClick()
         } else if nav?.arrSelectedModels.isEmpty == false {
-            print("liyong25-- ZLPhotoPreviewController 页面 nav?.arrSelectedModels.isEmpty == false")
             refreshOriginalLabelText()
         }
         
-        print("liyong25-- ZLPhotoPreviewController 页面 config.maxSelectCount: \(config.maxSelectCount), config.showSelectBtnWhenSingleSelect:\(config.showSelectBtnWhenSingleSelect), originalBtn.isSelected:\(originalBtn.isSelected), nav?.arrSelectedModels.count:\(nav?.arrSelectedModels.count ?? 0)")
         if config.maxSelectCount == 1,
            !config.showSelectBtnWhenSingleSelect,
            !originalBtn.isSelected,
            nav?.arrSelectedModels.count == 1,
            let currentModel = nav?.arrSelectedModels.first {
-            print("liyong25-- ZLPhotoPreviewController 页面 修改nav?.arrSelectedModels.first")
             currentModel.isSelected = false
             currentModel.editImage = nil
             currentModel.editImageModel = nil
@@ -709,7 +696,6 @@ class ZLPhotoPreviewController: UIViewController {
     }
     
     @objc private func doneBtnClick() {
-        print("liyong25-- ZLPhotoPreviewController 页面 doneBtnClick")
         guard let nav = navigationController as? ZLImageNavController else {
             zlLoggerInDebug("Navigation controller is null")
             return
@@ -737,7 +723,6 @@ class ZLPhotoPreviewController: UIViewController {
         }
         
         downloadAssetIfNeed(model: currentModel, sender: self) { [weak nav] in
-            print("liyong25-- ZLPhotoPreviewController 页面 downloadAssetIfNeed 回调")
             nav?.arrSelectedModels.append(currentModel)
             ZLPhotoConfiguration.default().didSelectAsset?(currentModel.asset)
             
@@ -782,18 +767,15 @@ class ZLPhotoPreviewController: UIViewController {
         let model = arrDataSources[currentIndex]
         let nav = navigationController as? ZLImageNavController
         ZLEditImageViewController.showEditImageVC(parentVC: self, image: image, editModel: model.editImageModel) { [weak self, weak nav] editImage, editImageModel in
-            print("liyong25-- ZLEditImageViewController 回调 ")
             guard let `self` = self else { return }
             model.editImage = editImage
             model.editImageModel = editImageModel
             if nav?.arrSelectedModels.contains(where: { $0 == model }) == false {
-                print("liyong25-- ZLEditImageViewController 回调 nav?.arrSelectedModels.contains(where: { $0 == model }) == false")
                 model.isSelected = true
                 nav?.arrSelectedModels.append(model)
                 self.resetSubviewStatus()
                 self.selPhotoPreview?.addSelModel(model: model)
             } else {
-                print("liyong25-- ZLEditImageViewController 回调 nav?.arrSelectedModels.contains(where: { $0 == model }) == true")
                 self.selPhotoPreview?.refreshCell(for: model)
             }
             self.collectionView.reloadItems(at: [IndexPath(row: self.currentIndex, section: 0)])

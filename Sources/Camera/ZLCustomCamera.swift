@@ -1254,33 +1254,13 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                                     if let model = results.first {
                                         self.getPhotoModelBlock?(model, isOriginal);
                                     }
+                                    self.dismiss(animated: true)
                                 }
                                 ac.cancelBlock = { [weak self] in
                                     self?.retakeBtnClick()
                                 }
                                 
                                 ac.previewAssets(sender: self!, assets: [asset], index: 0, isOriginal: true, showBottomViewAndSelectBtn: true)
-//                                ac.previewAssets(sender: self, assets: selectedAssets, index: indexPath.row, isOriginal: isOriginal, showBottomViewAndSelectBtn: true)
-                                
-                                
-                                
-                                
-//                                let model = ZLPhotoModel(asset: asset)
-//                                model.isSelected = true
-//                                
-//                                let vc = ZLPhotoPreviewController(photos: [model], index: 0, showBottomViewAndSelectBtn: true)
-//                                vc.backBlock = { [weak self, weak vc] in
-//                                    vc?.dismiss(animated: false)
-//                                    self?.retakeBtnClick()
-//                                }
-//                                
-//                                let nav = self?.getImageNav(rootViewController: vc)
-//                                nav?.isSelectedOriginal = true
-//                                nav?.arrSelectedModels.removeAll()
-//                                nav?.arrSelectedModels.append(model)
-//                                config.didSelectAsset?(asset)
-//                                
-//                                self?.present(nav!, animated: false)
                             } else {
                                 debugPrint("保存图片到相册失败")
                             }
