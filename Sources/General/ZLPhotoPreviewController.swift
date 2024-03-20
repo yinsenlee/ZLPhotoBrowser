@@ -677,6 +677,10 @@ class ZLPhotoPreviewController: UIViewController {
             refreshOriginalLabelText()
         }
         
+        if config.afterTakePhotoDidPreview {
+            return
+        }
+        
         if config.maxSelectCount == 1,
            !config.showSelectBtnWhenSingleSelect,
            !originalBtn.isSelected,
