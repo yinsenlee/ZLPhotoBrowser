@@ -505,7 +505,7 @@ class ZLPhotoPreviewController: UIViewController {
         }
         let selCount = nav.arrSelectedModels.count
         var doneTitle = localLanguageTextValue(.done)
-        if ZLPhotoConfiguration.default().showSelectCountOnDoneBtn, selCount > 0 {
+        if config.showSelectCountOnDoneBtn, !config.afterTakePhotoDidPreview, selCount > 0 {
             doneTitle += "(" + String(selCount) + ")"
         }
         doneBtn.setTitle(doneTitle, for: .normal)
