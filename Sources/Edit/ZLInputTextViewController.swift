@@ -43,9 +43,23 @@ class ZLInputTextViewController: UIViewController {
     
     private var textStyle: ZLInputTextStyle
     
+    private lazy var bgImageView: UIImageView = {
+        let view = UIImageView(image: image?.zl.blurImage(level: 4))
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
+    
+    private lazy var coverView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black
+        view.alpha = 0.4
+        return view
+    }()
+    
     private lazy var cancelBtn: UIButton = {
         let btn = UIButton(type: .custom)
         btn.setTitle(localLanguageTextValue(.cancel), for: .normal)
+        btn.setTitleColor(.zl.bottomToolViewDoneBtnNormalTitleColor, for: .normal)
         btn.titleLabel?.font = ZLLayout.bottomToolTitleFont
         btn.addTarget(self, action: #selector(cancelBtnClick), for: .touchUpInside)
         return btn
@@ -64,8 +78,7 @@ class ZLInputTextViewController: UIViewController {
     }()
     
     private lazy var textView: UITextView = {
-        let y = max(deviceSafeAreaInsets().top, 20) + 20 + ZLLayout.bottomToolBtnH + 12
-        let textView = UITextView(frame: CGRect(x: 10, y: y, width: view.zl.width - 20, height: 200))
+        let textView = UITextView()
         textView.keyboardAppearance = .dark
         textView.returnKeyType = .done
         textView.delegate = self
@@ -114,6 +127,8 @@ class ZLInputTextViewController: UIViewController {
         return collectionView
     }()
     
+    private var shouldLayout = true
+    
     private lazy var textLayer = CAShapeLayer()
     
     private let textLayerRadius: CGFloat = 10
@@ -124,7 +139,7 @@ class ZLInputTextViewController: UIViewController {
     var endInput: ((String, UIColor, UIFont, UIImage?, ZLInputTextStyle) -> Void)?
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
+        deviceIsiPhone() ? .portrait : .all
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -177,6 +192,22 @@ class ZLInputTextViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        guard shouldLayout else { return }
+        
+        shouldLayout = false
+        bgImageView.frame = view.bounds
+        
+        // iPad图片由竖屏切换到横屏时候填充方式会有点异常，这里重置下
+        if deviceIsiPad() {
+            if UIApplication.shared.statusBarOrientation.isLandscape {
+                bgImageView.contentMode = .scaleAspectFill
+            } else {
+                bgImageView.contentMode = .scaleAspectFit
+            }
+        }
+        
+        coverView.frame = bgImageView.bounds
+        
         let btnY = max(deviceSafeAreaInsets().top, 20)
         let cancelBtnW = localLanguageTextValue(.cancel).zl.boundingRect(font: ZLLayout.bottomToolTitleFont, limitSize: CGSize(width: .greatestFiniteMagnitude, height: ZLLayout.bottomToolBtnH)).width + 20
         cancelBtn.frame = CGRect(x: 15, y: btnY, width: cancelBtnW, height: ZLLayout.bottomToolBtnH)
@@ -187,6 +218,8 @@ class ZLInputTextViewController: UIViewController {
                 limitSize: CGSize(width: .greatestFiniteMagnitude, height: ZLLayout.bottomToolBtnH)
             ).width + 20
         doneBtn.frame = CGRect(x: view.zl.width - 20 - doneBtnW, y: btnY, width: doneBtnW, height: ZLLayout.bottomToolBtnH)
+        
+        textView.frame = CGRect(x: 10, y: doneBtn.zl.bottom + 30, width: view.zl.width - 20, height: 200)
         
         textStyleBtn.frame = CGRect(
             x: 12,
@@ -206,19 +239,16 @@ class ZLInputTextViewController: UIViewController {
         }
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        shouldLayout = true
+    }
+    
     private func setupUI() {
         view.backgroundColor = .black
         
-        let bgImageView = UIImageView(image: image?.zl.blurImage(level: 4))
-        bgImageView.frame = view.bounds
-        bgImageView.contentMode = .scaleAspectFit
         view.addSubview(bgImageView)
-        
-        let coverView = UIView(frame: bgImageView.bounds)
-        coverView.backgroundColor = .black
-        coverView.alpha = 0.4
         bgImageView.addSubview(coverView)
-        
         view.addSubview(cancelBtn)
         view.addSubview(doneBtn)
         view.addSubview(textView)
