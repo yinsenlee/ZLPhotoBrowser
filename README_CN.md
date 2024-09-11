@@ -102,31 +102,23 @@ ZLPhotoBrowser是一款微信样式的图片选择器，支持预览/相册内�
 ### 更新日志
 > [更多更新日志](https://github.com/longitachi/ZLPhotoBrowser/blob/master/CHANGELOG.md)
 ```
-● 4.4.8.1 - 4.4.8.2 (4.4.8 Patch)
-  Fix:
-    修复系统相机点击取消时相机没有消失的bug。
-● 4.4.8
+● 4.5.4
   Add:
-    适配iOS 17，使用UIGraphicsImageRenderer替换UIGraphicsBeginImageContextWithOptions。
+    支持iOS18。
+    提升图片编辑的使用体验，优化动画效果。
+    自定义相机支持设置`VideoMirrored`。
   Fix:
-    修复ZLImagePreviewController界面视频无法播放的bug。
-● 4.4.7
+    修复在非刘海屏的手机上，部分界面UI展示异常的问题。
+● 4.5.3
   Add:
-    涂鸦工具添加橡皮擦功能。
-    勾选原图按钮时，添加显示已选择图片总大小功能。
+    支持自定义无权限弹窗。
+    支持图片编辑工具在较少时居中排列。
   Fix:
-    修复裁剪视频时，起始时间不对的bug。
-● 4.4.6
-  Add:
-    支持设置序号label是否显示在选择按钮上。
-    支持滚动到底部功能。
-    图片编辑器中，所有操作均支持撤销及重做。
-    支持荷兰语。
-    支持设置文字贴纸的默认字体。
-    优化下拉返回体验。
-    优化屏幕旋转体验，
+    修复图片裁剪比例仅有一个时初次不显示的bug.
+    修复保存iCloud的资源时，可能报错的bug.
+● 4.5.2
   Fix:
-    修复阿拉伯语言环境下，文字贴纸不显示的bug。
+    修复图片裁剪界面，裁减比例不为0时，缩放图片时候，图片显示不正确的bug。
 ...
 ```
 
