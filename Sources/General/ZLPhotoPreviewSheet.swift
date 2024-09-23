@@ -317,7 +317,13 @@ public class ZLPhotoPreviewSheet: UIView {
             }
         }
         
-        sender.showDetailViewController(nav, sender: nil)
+        if ZLPhotoConfiguration.default().afterTakePhotoDidPreview {
+            UIView.performWithoutAnimation {
+                sender.showDetailViewController(nav, sender: nil)
+            }
+        } else {
+            sender.showDetailViewController(nav, sender: nil)
+        }
     }
     
     private func show(preview: Bool, animate: Bool, sender: UIViewController) {

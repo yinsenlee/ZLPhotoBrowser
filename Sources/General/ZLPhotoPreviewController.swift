@@ -299,7 +299,8 @@ class ZLPhotoPreviewController: UIViewController {
         var showSelPhotoPreview = false
         if ZLPhotoUIConfiguration.default().showSelectedPhotoPreview,
            let nav = navigationController as? ZLImageNavController,
-           !nav.arrSelectedModels.isEmpty {
+           !nav.arrSelectedModels.isEmpty,
+           !ZLPhotoConfiguration.default().afterTakePhotoDidPreview {
             showSelPhotoPreview = true
             bottomViewH += ZLPhotoPreviewController.selPhotoPreviewH
             selPhotoPreview?.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: ZLPhotoPreviewController.selPhotoPreviewH)
@@ -509,12 +510,12 @@ class ZLPhotoPreviewController: UIViewController {
         }
         let selCount = nav.arrSelectedModels.count
         var doneTitle = localLanguageTextValue(.done)
-        if ZLPhotoConfiguration.default().showSelectCountOnDoneBtn, selCount > 0 {
+        if config.showSelectCountOnDoneBtn, !config.afterTakePhotoDidPreview, selCount > 0 {
             doneTitle += "(" + String(selCount) + ")"
         }
         doneBtn.setTitle(doneTitle, for: .normal)
         
-        selPhotoPreview?.isHidden = selCount == 0
+        selPhotoPreview?.isHidden = (selCount == 0 || config.afterTakePhotoDidPreview)
         refreshOriginalLabelText()
         refreshBottomViewFrame()
         
@@ -674,10 +675,15 @@ class ZLPhotoPreviewController: UIViewController {
         
         let nav = (navigationController as? ZLImageNavController)
         nav?.isSelectedOriginal = originalBtn.isSelected
+        
         if nav?.arrSelectedModels.isEmpty == true, originalBtn.isSelected {
             selectBtnClick()
         } else if nav?.arrSelectedModels.isEmpty == false {
             refreshOriginalLabelText()
+        }
+        
+        if config.afterTakePhotoDidPreview {
+            return
         }
         
         if config.maxSelectCount == 1,

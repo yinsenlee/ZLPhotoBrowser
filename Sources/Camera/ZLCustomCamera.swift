@@ -44,6 +44,8 @@ open class ZLCustomCamera: UIViewController {
     
     @objc public var takeDoneBlock: ((UIImage?, URL?) -> Void)?
     
+    @objc public var getPhotoModelBlock: ((ZLResultModel?, Bool) -> Void)?
+    
     @objc public var cancelBlock: (() -> Void)?
     
     public lazy var tipsLabel: UILabel = {
@@ -1220,22 +1222,6 @@ open class ZLCustomCamera: UIViewController {
         recordVideoPlayerLayer?.player?.seek(to: .zero)
         recordVideoPlayerLayer?.player?.play()
     }
-    
-    // 通过 UIImage 创建占位符 PHAsset 对象（不保存到相册）
-    func createPHAssetFromImage(image: UIImage) -> PHAsset? {
-        var createdAsset: PHAsset?
-        
-        PHPhotoLibrary.shared().performChangesAndWait({
-            // 创建 PHAssetChangeRequest 对象
-            if let request = PHAssetChangeRequest.creationRequestForAsset(from: image) {
-                // 设置占位符的图片
-                request.creationDate = Date()
-                createdAsset = request.placeholderForCreatedAsset
-            }
-        })
-        
-        return createdAsset
-    }
 }
 
 extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
@@ -1247,7 +1233,7 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
     }
     
     public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
-        ZLMainAsync {
+        ZLMainAsync { [self] in
             defer {
                 self.isTakingPicture = false
             }
@@ -1266,20 +1252,34 @@ extension ZLCustomCamera: AVCapturePhotoCaptureDelegate {
                 self.takedImageView.image = self.takedImage
                 self.takedImageView.isHidden = false
                 
-                if ZLPhotoConfiguration.default().afterTakePhotoDidPreview {
-                    guard let asset = createPHAssetFromImage(image: self.takedImage) else {
-                        NSLog("PHAsset 对象为空")
-                        return
+                let config = ZLPhotoConfiguration.default()
+                
+                if config.afterTakePhotoDidPreview {
+                    if let image = self.takedImage {
+                        ZLPhotoManager.saveImageToAlbum(image: image) { [weak self] suc, asset in
+                            if suc, let asset = asset {
+                                let ac = ZLPhotoPreviewSheet()
+                                
+                                ac.selectImageBlock = { [weak self] results, isOriginal in
+                                    guard let `self` = self else { return }
+                                    
+                                    if let model = results.first {
+                                        self.getPhotoModelBlock?(model, isOriginal);
+                                    }
+                                    self.dismiss(animated: true)
+                                }
+                                ac.cancelBlock = { [weak self] in
+                                    self?.retakeBtnClick()
+                                }
+                                
+                                ac.previewAssets(sender: self!, assets: [asset], index: 0, isOriginal: true, showBottomViewAndSelectBtn: true)
+                            } else {
+                                debugPrint("保存图片到相册失败")
+                            }
+                        }
                     }
-                    guard let model = ZLPhotoModel(asset: asset) else {
-                        NSLog("ZLPhotoModel 对象为空")
-                        return
-                    }
-                    NSLog("拍照后直接进入预览页")
-                    let vc = ZLPhotoPreviewController(photos: [model], index: 0, showBottomViewAndSelectBtn: true)
-                    self.navigationController?.pushViewController(vc, animated: YES)
                 } else {
-                    NSLog("拍照后直接进入编辑页面")
+                    print("拍照后直接进入编辑页面")
                     self.editImage()
                 }
             } else {
