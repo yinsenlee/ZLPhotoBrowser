@@ -124,6 +124,10 @@ class ZLPhotoPreviewController: UIViewController {
         btn.titleLabel?.lineBreakMode = .byCharWrapping
         btn.titleLabel?.numberOfLines = 0
         btn.contentHorizontalAlignment = .left
+        
+        btn.layer.borderColor = UIColor.green.cgColor
+        btn.layer.borderWidth = 1
+        
         return btn
     }()
     
@@ -550,12 +554,7 @@ class ZLPhotoPreviewController: UIViewController {
         
         if ZLPhotoConfiguration.default().allowSelectOriginal,
            ZLPhotoConfiguration.default().allowSelectImage {
-            originalBtn.isHidden = !(
-                (currentModel.type == .image) ||
-                (currentModel.type == .livePhoto && !config.allowSelectLivePhoto) ||
-                (currentModel.type == .gif && !config.allowSelectGif) ||
-                (currentModel.type == .video && config.allowSelectVideo)
-            )
+            originalBtn.isHidden = !((currentModel.type == .image) || (currentModel.type == .livePhoto && !config.allowSelectLivePhoto) || (currentModel.type == .gif && !config.allowSelectGif))
         }
     }
     
