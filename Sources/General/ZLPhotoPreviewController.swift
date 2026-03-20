@@ -549,12 +549,13 @@ class ZLPhotoPreviewController: UIViewController {
         editBtn.isHidden = hideEditBtn
         
         if ZLPhotoConfiguration.default().allowSelectOriginal,
-           ZLPhotoConfiguration.default().allowSelectImage {
+           ZLPhotoConfiguration.default().allowSelectImage,
+           ZLPhotoConfiguration.default().allowSelectVideo {
             originalBtn.isHidden = !(
                 (currentModel.type == .image) ||
                 (currentModel.type == .livePhoto && !config.allowSelectLivePhoto) ||
                 (currentModel.type == .gif && !config.allowSelectGif) ||
-                (currentModel.type == .video && !config.allowSelectVideo)
+                (currentModel.type == .video)
             )
         }
     }
