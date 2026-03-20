@@ -550,7 +550,12 @@ class ZLPhotoPreviewController: UIViewController {
         
         if ZLPhotoConfiguration.default().allowSelectOriginal,
            ZLPhotoConfiguration.default().allowSelectImage {
-            originalBtn.isHidden = !((currentModel.type == .image) || (currentModel.type == .livePhoto && !config.allowSelectLivePhoto) || (currentModel.type == .gif && !config.allowSelectGif))
+            originalBtn.isHidden = !(
+                (currentModel.type == .image) ||
+                (currentModel.type == .livePhoto && !config.allowSelectLivePhoto) ||
+                (currentModel.type == .gif && !config.allowSelectGif) ||
+                (currentModel.type == .video && !config.allowSelectVideo)
+            )
         }
     }
     
