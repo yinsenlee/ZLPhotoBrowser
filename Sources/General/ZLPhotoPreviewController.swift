@@ -554,7 +554,7 @@ class ZLPhotoPreviewController: UIViewController {
                 (currentModel.type == .image) ||
                 (currentModel.type == .livePhoto && !config.allowSelectLivePhoto) ||
                 (currentModel.type == .gif && !config.allowSelectGif) ||
-                (currentModel.type == .video)
+                (currentModel.type == .video && !config.allowSelectVideo)
             )
         }
     }
