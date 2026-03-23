@@ -211,9 +211,6 @@ class ZLPhotoPreviewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.layer.borderColor = UIColor.red.cgColor
-        self.view.layer.borderWidth = 2
-        
         setupUI()
         
         addPopInteractiveTransition()
@@ -399,7 +396,7 @@ class ZLPhotoPreviewController: UIViewController {
         editBtn.isHidden = (!config.allowEditImage && !config.allowEditVideo)
         bottomView.addSubview(editBtn)
         
-        originalBtn.isHidden = false //!(config.allowSelectOriginal && config.allowSelectImage)
+        originalBtn.isHidden = !(config.allowSelectOriginal && config.allowSelectImage)
         originalBtn.isSelected = (navigationController as? ZLImageNavController)?.isSelectedOriginal ?? false
         bottomView.addSubview(originalBtn)
         bottomView.addSubview(originalLabel)
@@ -551,12 +548,15 @@ class ZLPhotoPreviewController: UIViewController {
         }
         editBtn.isHidden = hideEditBtn
         
-        originalBtn.isHidden = false
-        
-//        if ZLPhotoConfiguration.default().allowSelectOriginal,
-//           ZLPhotoConfiguration.default().allowSelectImage {
-//            originalBtn.isHidden = !((currentModel.type == .image) || (currentModel.type == .livePhoto && !config.allowSelectLivePhoto) || (currentModel.type == .gif && !config.allowSelectGif))
-//        }
+        if ZLPhotoConfiguration.default().allowSelectOriginal,
+           ZLPhotoConfiguration.default().allowSelectImage {
+            originalBtn.isHidden = !(
+                                    (currentModel.type == .image) ||
+                                    (currentModel.type == .livePhoto && !config.allowSelectLivePhoto) ||
+                                    (currentModel.type == .gif && !config.allowSelectGif) ||
+                                    currentModel.type == .video
+            )
+        }
     }
     
     private func refreshOriginalLabelText() {
