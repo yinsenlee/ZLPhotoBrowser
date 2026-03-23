@@ -141,10 +141,6 @@ class ZLPhotoPreviewController: UIViewController {
         } else {
             btn.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
         }
-        
-        btn.layer.borderColor = UIColor.green.cgColor
-        btn.layer.borderWidth = 1
-        
         return btn
     }()
     
@@ -551,6 +547,8 @@ class ZLPhotoPreviewController: UIViewController {
             }
         }
         editBtn.isHidden = hideEditBtn
+        
+        originalBtn.isHidden = false
         
 //        if ZLPhotoConfiguration.default().allowSelectOriginal,
 //           ZLPhotoConfiguration.default().allowSelectImage {
