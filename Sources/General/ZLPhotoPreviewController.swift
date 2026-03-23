@@ -124,10 +124,6 @@ class ZLPhotoPreviewController: UIViewController {
         btn.titleLabel?.lineBreakMode = .byCharWrapping
         btn.titleLabel?.numberOfLines = 0
         btn.contentHorizontalAlignment = .left
-        
-        btn.layer.borderColor = UIColor.green.cgColor
-        btn.layer.borderWidth = 1
-        
         return btn
     }()
     
@@ -145,6 +141,10 @@ class ZLPhotoPreviewController: UIViewController {
         } else {
             btn.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
         }
+        
+        btn.layer.borderColor = UIColor.green.cgColor
+        btn.layer.borderWidth = 1
+        
         return btn
     }()
     
@@ -552,10 +552,10 @@ class ZLPhotoPreviewController: UIViewController {
         }
         editBtn.isHidden = hideEditBtn
         
-        if ZLPhotoConfiguration.default().allowSelectOriginal,
-           ZLPhotoConfiguration.default().allowSelectImage {
-            originalBtn.isHidden = !((currentModel.type == .image) || (currentModel.type == .livePhoto && !config.allowSelectLivePhoto) || (currentModel.type == .gif && !config.allowSelectGif))
-        }
+//        if ZLPhotoConfiguration.default().allowSelectOriginal,
+//           ZLPhotoConfiguration.default().allowSelectImage {
+//            originalBtn.isHidden = !((currentModel.type == .image) || (currentModel.type == .livePhoto && !config.allowSelectLivePhoto) || (currentModel.type == .gif && !config.allowSelectGif))
+//        }
     }
     
     private func refreshOriginalLabelText() {
