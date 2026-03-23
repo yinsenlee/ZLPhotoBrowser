@@ -211,6 +211,9 @@ class ZLPhotoPreviewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.view.layer.borderColor = UIColor.red.cgColor
+        self.view.layer.borderWidth = 2
+        
         setupUI()
         
         addPopInteractiveTransition()
